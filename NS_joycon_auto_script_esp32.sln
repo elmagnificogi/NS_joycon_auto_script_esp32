@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1082
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{803FD0C6-D64E-4E16-9DC3-1DAEC859A3D2}") = "NS_joycon_auto_script_esp32", "NS_joycon_auto_script_esp32.vgdbproj", "{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|VisualGDB = Debug|VisualGDB
+		MinSizeRel|VisualGDB = MinSizeRel|VisualGDB
+		Release|VisualGDB = Release|VisualGDB
+		RelWithDebInfo|VisualGDB = RelWithDebInfo|VisualGDB
+		Tests (Debug)|VisualGDB = Tests (Debug)|VisualGDB
+		Tests (Release)|VisualGDB = Tests (Release)|VisualGDB
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.Debug|VisualGDB.ActiveCfg = Debug|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.Debug|VisualGDB.Build.0 = Debug|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.MinSizeRel|VisualGDB.ActiveCfg = MinSizeRel|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.MinSizeRel|VisualGDB.Build.0 = MinSizeRel|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.Release|VisualGDB.ActiveCfg = Release|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.Release|VisualGDB.Build.0 = Release|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.RelWithDebInfo|VisualGDB.ActiveCfg = RelWithDebInfo|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.RelWithDebInfo|VisualGDB.Build.0 = RelWithDebInfo|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.Tests (Debug)|VisualGDB.ActiveCfg = Tests (Debug)|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.Tests (Debug)|VisualGDB.Build.0 = Tests (Debug)|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.Tests (Release)|VisualGDB.ActiveCfg = Tests (Release)|VisualGDB
+		{9CD6B31B-4A09-48DE-AFC1-50ACC1164AA0}.Tests (Release)|VisualGDB.Build.0 = Tests (Release)|VisualGDB
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BAC0973B-1DB8-42B1-9B14-DD8D99EA59AC}
+	EndGlobalSection
+EndGlobal
