@@ -714,14 +714,14 @@ static void echo_task()
 					but3_send  += 0x80;// ZL
 					break;
 				case 11:
-					but1_send  += 0x40;// Z
+					but1_send  += 0x40;// R
 					break;
 				case 12:
-					but1_send  += 0x40;// z+plus
+					//but1_send  += 0x40;// R+plus
 					but2_send  = 0x01;//Minus
 					break;
 				case 13:
-					but1_send  += 0x40;// z+up
+					//but1_send  += 0x40;// z+up
 					but2_send  = 0x10;//Home
 					break;
 				case 14:
