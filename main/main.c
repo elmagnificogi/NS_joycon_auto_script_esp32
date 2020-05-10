@@ -11,6 +11,7 @@
 #include "esp_bt_device.h"
 #include "esp_bt.h"
 #include "esp_err.h"
+#include "esp_system.h"
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "esp_gap_bt_api.h"
@@ -252,6 +253,11 @@ const uint8_t hid_descriptor_gamecube[] = {
 //    0xc0
 };
 int hid_descriptor_gc_len = sizeof(hid_descriptor_gamecube);
+
+static uint8_t emptyReport[] = {
+	0x0,
+	0x0
+};
 ///Switch Replies
 //                          repId Timer nibble|     button     |     L stick     |     R stick    | Vib   ACK  subId                         |    MAC ADDRESS                   | ???   color
 static uint8_t reply02[] = {0x21, 0x01, 0x40, 0x00, 0x00, 0x00, 0xe6, 0x27, 0x78, 0xab, 0xd7, 0x76, 0x00, 0x82, 0x02, 0x03, 0x48, 0x03, 0x02, 0xD8, 0xA0, 0x1D, 0x40, 0x15, 0x66, 0x03, 0x00, 0x00 , 0x00 , 0x00 , 0x00  , 0x00 , 0x00 , 0x00 , 0x00  , 0x00 , 0x00 , 0x00 , 0x00  , 0x00 , 0x00 , 0x00 , 0x00
@@ -472,8 +478,12 @@ void send_task(void* pvParameters) {
 			}
 		}
 		send_buttons();
-		if(!paired)
-			vTaskDelay(100/portTICK_PERIOD_MS);
+	    if (!paired)
+	    {
+		    emptyReport[1] = timer;
+		    esp_hid_device_send_report(ESP_HIDD_REPORT_TYPE_INTRDATA, emptyReport[0], sizeof(emptyReport), emptyReport);
+		    vTaskDelay(100 / portTICK_PERIOD_MS);
+	    }
 		else{
 			vTaskDelay(cmd_delay / portTICK_PERIOD_MS);
 
@@ -904,7 +914,39 @@ static void echo_task()
     }
 }
 
-
+void set_bt_address()
+{
+	//store a random mac address in flash
+	nvs_handle my_handle;
+	esp_err_t err;
+	uint8_t bt_addr[8];
+    
+	err = nvs_open("storage", NVS_READWRITE, &my_handle);
+	if (err != ESP_OK) return err;
+    
+	size_t addr_size = 0;
+	err = nvs_get_blob(my_handle, "mac_addr", NULL, &addr_size);
+	if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return err;
+    
+	if (addr_size > 0) {
+		err = nvs_get_blob(my_handle, "mac_addr", bt_addr, &addr_size);
+	}
+	else
+	{
+		for (int i = 0; i < 8; i++)
+			bt_addr[i] = esp_random() % 255;
+		size_t addr_size = sizeof(bt_addr);
+		err = nvs_set_blob(my_handle, "mac_addr", bt_addr, addr_size);
+	}
+    
+	err = nvs_commit(my_handle);
+	nvs_close(my_handle);
+	esp_base_mac_addr_set(bt_addr);
+    
+	//put mac addr in switch pairing packet
+	for(int z = 0 ; z < 6 ; z++)
+	    reply02[z + 19] = bt_addr[z];
+}
 
 
 void app_main() {
@@ -975,11 +1017,13 @@ void app_main() {
         ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK( ret );
+	
+	set_bt_address();
 
 	ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_BLE));
 
 	esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
-    //esp_bt_mem_release(ESP_BT_MODE_BLE);
+    esp_bt_mem_release(ESP_BT_MODE_BLE);
     if ((ret = esp_bt_controller_init(&bt_cfg)) != ESP_OK) {
         ESP_LOGE(TAG, "initialize controller failed: %s\n",  esp_err_to_name(ret));
         return;
@@ -999,7 +1043,7 @@ void app_main() {
         ESP_LOGE(TAG, "enable bluedroid failed: %s\n",  esp_err_to_name(ret));
         return;
     }
-    //esp_bt_gap_register_callback(esp_bt_gap_cb);
+    esp_bt_gap_register_callback(esp_bt_gap_cb);
 	
     ESP_LOGI(TAG, "setting hid parameters");
     esp_hid_device_register_app(&app_param, &both_qos, &both_qos);
