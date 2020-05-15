@@ -1,10 +1,3 @@
-//
-//  BlueCubeMod Firmware
-//
-//
-//  Created by Nathan Reeves 2019
-//
-
 #include "esp_log.h"
 #include "esp_hidd_api.h"
 #include "esp_bt_main.h"
@@ -950,12 +943,21 @@ void set_bt_address()
 
 
 void app_main() {
-    //GameCube Contoller reading init
-    //rmt_tx_init();
-    //rmt_rx_init();
 
-	// get button from game cube
-    //xTaskCreatePinnedToCore(get_buttons, "gbuttons", 2048, NULL, 1, NULL, 1);
+	/*--------------------------------------------------------------
+	 * initialize the uorb subsystem, modules communicate mainly via
+	 * uorb subsystem
+	 --------------------------------------------------------------*/
+	if(uorb_init()!=OK){
+		boot_err("Uorb_init failed! Errno:%d\n", errno);
+		configASSERT(0);
+	}
+	boot_info("uorb_init done!\n");
+
+
+
+	//module init
+
 
 	//flash LED
     vTaskDelay(100);
@@ -1056,6 +1058,9 @@ void app_main() {
 
     ESP_LOGI(TAG, "setting to connectable, discoverable");
     esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE);
+
+
+    
     //start blinking
     xTaskCreate(startBlink, "blink_task", 1024, NULL, 1, &BlinkHandle);
 

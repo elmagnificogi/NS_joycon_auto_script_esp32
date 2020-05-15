@@ -27,6 +27,25 @@
 
 
 
+## 架构
+
+- uorb 作为module之间传递数据的通信方式
+- inode作为中间层连接c与c++，driver和app层
+
+### module
+
+- controllor 作为整个模拟手柄的控制器，有pro和joyconR,joyconL,joyconGrip
+- notify 作为整个的状态显示，其实就是控制led作为运行状态的提示
+- console 作为串口指令控制台，用于debug和输出
+- ap-client 作为连接wifi的客户端，连接到公网络中
+- ap-station 作为连接的 wifi station，允许用户连接进来
+- server 
+  - http 作为服务器后端，用于更新脚本，同时执行脚本
+  - html 作为服务器前端，用于与用户交互，反馈脚本结果或者运行状态
+  - virtual com 作为伊机控的透传串口
+
+
+
 ## 来源参考
 
 BlueCubeMod
